@@ -1,13 +1,111 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 20px;
+/* Gaya umum untuk seluruh body */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to bottom, #f9c9d1, #f4a7c9);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    padding: 40px;
 }
 
-.task{
-    margin-bottom: 10px;
+/* Box utama untuk form dan todo list */
+.box {
+    border: 2px solid #c967a2; 
+    padding: 20px;
+    width: 500px;
+    background: #ffffff; 
+    border-radius: 8px; 
 }
 
-.done{
+/* Form input dan button inline */
+.form-inline {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Input teks pada form tambah to-do */
+.form-inline input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    font-size: 16px;
+    border: 2px solid #c967a2; 
+    border-radius: 5px;
+}
+
+/* Mengubah border input saat hover */
+.form-inline input[type="text"]:hover {
+    border-color: #600f40; 
+}
+
+/* Tombol tambah */
+.form-inline button {
+    padding: 8px 20px;
+    font-size: 16px;
+    background: #c967a2; 
+    color: white;
+    border: none;
+    border-radius: 5px; 
+}
+
+.form-inline button:hover {
+    background: #600f40; 
+}
+
+/* Setiap item dalam todo list */
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding: 8px;
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    background: #fafafa;
+}
+
+/* Input teks dalam setiap item */
+.todo-item input[type="text"] {
+    flex: 1;
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 14px;
+    border: none; 
+    background: transparent; 
+}
+
+/* Gaya untuk item yang sudah selesai (garis coret) */
+.todo-item input.done {
     text-decoration: line-through;
     color: gray;
+}
+
+/* Tombol di dalam setiap item */
+.buttons {
+    display: flex;
+    gap: 5px;
+}
+
+/* Tombol aksi seperti "Selesai" dan "Hapus" */
+.btn {
+    padding: 6px 18px;
+    background: #c967a2; 
+    border: 1px solid #c967a2; 
+    text-decoration: none;
+    font-size: 14px;
+    color: white; 
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background: #600f40; 
+}
+
+/* Tombol yang dinonaktifkan (Selesai) */
+.btn.disabled {
+    background: #ccc; 
+    color: #757575; 
+    pointer-events: none; 
 }
