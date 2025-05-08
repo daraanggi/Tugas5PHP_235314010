@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Registrasi - To Do List</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <div class="box"> 
@@ -38,8 +39,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="text" id="username" name="username" placeholder="Masukkan username" required autocomplete="username">
 
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="new-password">
-
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Masukkan password" required autocomplete="new-password">
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fa-solid fa-eye-slash" id="toggleIcon"></i>
+                </span>
+            </div>
             <button type="submit">Daftar</button>
 
             <?php if (isset($error)) : ?>
@@ -48,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
         <p style="margin-top: 10px;">Sudah punya akun? <a href="index.php">Login</a></p>
     </div>
+    <script src="script.js"></script>
 </body>
 </html>
 
