@@ -1,38 +1,53 @@
 <?php
 session_start();
+require 'koneksi.php';
 
-//Cek apakah 'todolist' sudah ada di session. Jika belum, buat array kosong untuk menampung to-do list
-if (!isset($_SESSION['todolist'])) {
-    $_SESSION['todolist'] = [];
+// Cek apakah user login
+if (!isset($_SESSION['user'])) {
+    header("Location: login.php");
+    exit;
 }
 
-//Proses saat tombol 'Tambah' ditekan
+$user_id = $_SESSION['user'];
+
+// Tambah data
 if (isset($_POST['tambah']) && !empty(trim($_POST['todo']))) {
-    $_SESSION['todolist'][] = ['teks' => htmlspecialchars($_POST['todo']), 'selesai' => false];
+    $todo = htmlspecialchars($_POST['todo']);
+    $stmt = $conn->prepare("INSERT INTO todolist (user_id, teks) VALUES (?, ?)");
+    $stmt->bind_param("is", $user_id, $todo);
+    $stmt->execute();
     header("Location: todolist.php");
     exit;
 }
 
-//Proses saat tombol 'Selesai' ditekan untuk menandai item sebagai selesai
+// Tandai selesai
 if (isset($_GET['selesai'])) {
-    $i = $_GET['selesai'];
-    if (isset($_SESSION['todolist'][$i])) {
-        $_SESSION['todolist'][$i]['selesai'] = true;
-    }
+    $id = (int)$_GET['selesai'];
+    $stmt = $conn->prepare("UPDATE todolist SET selesai = 1 WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $id, $user_id);
+    $stmt->execute();
     header("Location: todolist.php");
     exit;
 }
 
-//Proses saat tombol 'Hapus' ditekan untuk menghapus item dari to-do list
+// Hapus
 if (isset($_GET['hapus'])) {
-    $i = $_GET['hapus'];
-    if (isset($_SESSION['todolist'][$i])) {
-        array_splice($_SESSION['todolist'], $i, 1);
-    }
+    $id = (int)$_GET['hapus'];
+    $stmt = $conn->prepare("DELETE FROM todolist WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $id, $user_id);
+    $stmt->execute();
     header("Location: todolist.php");
     exit;
 }
+
+// Ambil data to-do dari database
+$stmt = $conn->prepare("SELECT id, teks, selesai FROM todolist WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$todolist = $result->fetch_all(MYSQLI_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -41,31 +56,39 @@ if (isset($_GET['hapus'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="box">
+    <div class="main-container">
+        <header class="profil-header">
+            <img src="dara.jpeg" alt="Foto Profil">
+            <div class="profil-info">
+                <h1>Dara Anggi Puspa</h1>
+                <p>235314010</p>
+                <p>Login sebagai: <?= htmlspecialchars($_SESSION['username']) ?></p>
+            </div>
+        </header>
 
-        <!-- Form untuk menambah item baru ke dalam to-do list -->
-        <form method="POST" class="form-inline">
-            <input type="text" name="todo" placeholder="<Teks to do>" required>
-            <button type="submit" name="tambah">Tambah</button>
-        </form>
+        <div class="box">
+            <form method="POST" class="form-inline">
+                <input type="text" name="todo" placeholder="Teks to do" required>
+                <button type="submit" name="tambah">Tambah</button>
+            </form>
 
-        <div class="todo-list">
-            
-            <!-- Menampilkan semua item dalam to-do list -->
-            <?php foreach ($_SESSION['todolist'] as $index => $item): ?>
-                <div class="todo-item">
-                    <input type="text" value="<?= $item['teks'] ?>" readonly class="<?= $item['selesai'] ? 'done' : '' ?>">
-                    <div class="buttons">
-                        <?php if (!$item['selesai']): ?>
-                            <a href="?selesai=<?= $index ?>" class="btn">Selesai</a>
-                        <?php else: ?>
-                            <span class="btn disabled">Selesai</span>
-                        <?php endif; ?>
-                        <a href="?hapus=<?= $index ?>" class="btn">Hapus</a>
+            <div class="todo-list">
+                <?php foreach ($todolist as $item): ?>
+                    <div class="todo-item">
+                        <input type="text" value="<?= htmlspecialchars($item['teks']) ?>" readonly class="<?= $item['selesai'] ? 'done' : '' ?>">
+                        <div class="buttons">
+                            <?php if (!$item['selesai']): ?>
+                                <a href="?selesai=<?= $item['id'] ?>" class="btn">Selesai</a>
+                            <?php else: ?>
+                                <span class="btn disabled">Selesai</span>
+                            <?php endif; ?>
+                            <a href="?hapus=<?= $item['id'] ?>" class="btn">Hapus</a>
+                        </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </body>
 </html>
+
