@@ -116,7 +116,7 @@ $todolist = $result->fetch_all(MYSQLI_ASSOC);
                     <?php endif; ?>
                 </div>
                 
-                <a href="logout.php" class="btn logout-btn">Logout</a>
+                <a href="logout.php" class="btn logout-btn">Keluar</a>
             </div>
         </div>
     </div>
