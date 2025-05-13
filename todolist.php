@@ -100,19 +100,23 @@ $todolist = $result->fetch_all(MYSQLI_ASSOC);
                     </div>
                 <?php endforeach; ?>
             </div>
+            
+            <div class="footer-container">
+                <div class="pagination">
+                    <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="btn">Sebelumnya</a>
+                    <?php endif; ?>
+                        
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <a href="?page=<?= $i ?>" class="btn <?= ($page == $i) ? 'active' : '' ?>"><?= $i ?></a>
+                    <?php endfor; ?>
 
-            <div class="pagination">
-                <?php if ($page > 1): ?>
-                    <a href="?page=<?= $page - 1 ?>" class="btn">Sebelumnya</a>
-                <?php endif; ?>
-
-                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                    <a href="?page=<?= $i ?>" class="btn <?= ($page == $i) ? 'active' : '' ?>"><?= $i ?></a>
-                <?php endfor; ?>
-
-                <?php if ($page < $total_pages): ?>
-                    <a href="?page=<?= $page + 1 ?>" class="btn">Berikutnya</a>
-                <?php endif; ?>
+                    <?php if ($page < $total_pages): ?>            
+                        <a href="?page=<?= $page + 1 ?>" class="btn">Berikutnya</a>
+                    <?php endif; ?>
+                </div>
+                
+                <a href="logout.php" class="btn logout-btn">Logout</a>
             </div>
         </div>
     </div>
