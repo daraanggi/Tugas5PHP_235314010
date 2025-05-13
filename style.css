@@ -184,7 +184,7 @@ body {
 }
 
 .profil-header img {
-    width: 50px;
+    width: 80px;
     height: 100px;
     border-radius: 50px;
     object-fit: cover;
@@ -213,3 +213,32 @@ body {
         transform: translateY(0);
     }
 }
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination .btn {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #eee;
+    text-decoration: none;
+    border-radius: 5px;
+    color: #333;
+}
+
+.pagination .btn:hover {
+    background-color: #ddd;
+}
+
+.pagination .btn.active {
+    background-color: #333;
+    color: #fff;
+}
+
+.pagination .btn.disabled {
+    background-color: #ccc;
+    pointer-events: none;
+}
+
