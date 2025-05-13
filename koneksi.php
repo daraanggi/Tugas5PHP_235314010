@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $user = "root";
-$pass = ""; // kosong kalau pakai XAMPP
+$pass = ""; 
 $db   = "todolist_db";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
