@@ -2,7 +2,7 @@
 session_start();
 require 'koneksi.php';
 
-// Cek apakah user login
+//Mengecek apakah user login
 if (!isset($_SESSION['user'])) {
     header("Location: login.php");
     exit;
@@ -10,7 +10,7 @@ if (!isset($_SESSION['user'])) {
 
 $user_id = $_SESSION['user'];
 
-// Tambah data
+//Menambah data
 if (isset($_POST['tambah']) && !empty(trim($_POST['todo']))) {
     $todo = htmlspecialchars($_POST['todo']);
     $stmt = $conn->prepare("INSERT INTO todolist (user_id, teks) VALUES (?, ?)");
@@ -20,7 +20,7 @@ if (isset($_POST['tambah']) && !empty(trim($_POST['todo']))) {
     exit;
 }
 
-// Tandai selesai
+//Menandai selesai
 if (isset($_GET['selesai'])) {
     $id = (int)$_GET['selesai'];
     $stmt = $conn->prepare("UPDATE todolist SET selesai = 1 WHERE id = ? AND user_id = ?");
@@ -30,7 +30,7 @@ if (isset($_GET['selesai'])) {
     exit;
 }
 
-// Hapus
+//Menghapus
 if (isset($_GET['hapus'])) {
     $id = (int)$_GET['hapus'];
     $stmt = $conn->prepare("DELETE FROM todolist WHERE id = ? AND user_id = ?");
@@ -40,14 +40,27 @@ if (isset($_GET['hapus'])) {
     exit;
 }
 
-// Ambil data to-do dari database
-$stmt = $conn->prepare("SELECT id, teks, selesai FROM todolist WHERE user_id = ?");
+//Paginasi
+$items_per_page = 6;
+$page = isset ($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $items_per_page;
+
+//Menghitung total data
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM todolist WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$total_items = $row['total'];
+$total_pages = ceil($total_items / $items_per_page);
+
+//Ambil data to-do dari database dengan paginasi
+$stmt = $conn->prepare("SELECT id, teks, selesai FROM todolist WHERE user_id = ? LIMIT ? OFFSET ?");
+$stmt->bind_param("iii", $user_id, $items_per_page, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 $todolist = $result->fetch_all(MYSQLI_ASSOC);
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -86,6 +99,20 @@ $todolist = $result->fetch_all(MYSQLI_ASSOC);
                         </div>
                     </div>
                 <?php endforeach; ?>
+            </div>
+
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="?page=<?= $page - 1 ?>" class="btn">Sebelumnya</a>
+                <?php endif; ?>
+
+                <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                    <a href="?page=<?= $i ?>" class="btn <?= ($page == $i) ? 'active' : '' ?>"><?= $i ?></a>
+                <?php endfor; ?>
+
+                <?php if ($page < $total_pages): ?>
+                    <a href="?page=<?= $page + 1 ?>" class="btn">Berikutnya</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
