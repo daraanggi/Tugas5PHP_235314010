@@ -54,7 +54,7 @@ Halaman utama aplikasi di mana pengguna dapat menambahkan, mengedit, dan menghap
 Berikut adalah screenshot dari tabel *Pengguna (Users)* dan *Tugas (To Do)* yang digunakan dalam aplikasi ini:
 
 - *Tabel Pengguna (Users)*  
-  ![Tabel Pengguna](images/tabel_users.png)
+  ![Tabel Pengguna](images/tabel_user.png)
 
 - *Tabel Tugas (Todo)*  
   ![Tabel Tugas](images/tabel_todo.png)
