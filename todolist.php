@@ -122,4 +122,3 @@ $todolist = $result->fetch_all(MYSQLI_ASSOC);
     </div>
 </body>
 </html>
-
